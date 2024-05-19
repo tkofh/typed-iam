@@ -1,0 +1,41 @@
+{
+  "name": "@typed-iam/aws",
+  "version": "0.0.0",
+  "description": "typesafe utilities for working with AWS IAM policies",
+  "author": "Tim Morris <timthewebguy@gmail.com>",
+  "homepage": "https://github.com/tkofh/typed-iam#readme",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkofh/typed-iam.git"
+  },
+  "scripts": {
+    "build": "unbuild",
+    "test": "vitest run"
+  },
+  "bugs": {
+    "url": "https://github.com/tkofh/typed-iam/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@vitest/coverage-v8": "^1.6.0",
+    "unbuild": "^2.0.0",
+    "vitest": "^1.6.0"
+  }
+}

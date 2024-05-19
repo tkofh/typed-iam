@@ -1,3 +1,35 @@
 {
-  "extends": "@repo/typescript-config/base.json"
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "lib": ["es2023", "DOM"],
+    "moduleResolution": "Bundler",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "exactOptionalPropertyTypes": true,
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    "module": "esnext",
+    "outDir": "dist",
+    "sourceMap": true,
+
+    "declaration": true,
+
+    "composite": true,
+    "declarationMap": true
+  }
 }

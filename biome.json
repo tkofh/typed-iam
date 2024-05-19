@@ -1,0 +1,112 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn",
+        "noStaticOnlyClass": "off",
+        "noUselessTernary": "warn",
+        "noVoid": "warn",
+        "useSimplifiedLogicExpression": "warn"
+      },
+      "correctness": {
+        "noNewSymbol": "error",
+        "noUnusedPrivateClassMembers": "error",
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "error"
+      },
+      "performance": {
+        "noBarrelFile": "warn",
+        "noReExportAll": "error"
+      },
+      "style": {
+        "noDefaultExport": "error",
+        "noNamespace": "error",
+        "useCollapsedElseIf": "error",
+        "useBlockStatements": "error",
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false,
+            "enumMemberCase": "PascalCase"
+          }
+        },
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false
+          }
+        },
+        "useImportType": "error",
+        "useExportType": "error",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "generic"
+          }
+        },
+        "useShorthandAssign": "error",
+        "useSingleCaseStatement": "warn"
+      },
+      "suspicious": {
+        "noApproximativeNumericConstant": "error",
+        "noEmptyBlockStatements": "warn",
+        "useAwait": "warn",
+        "noShadowRestrictedNames": "off"
+      },
+      "nursery": {
+        "noConstantMathMinMaxClamp": "warn",
+        "noDuplicateElseIf": "warn",
+        "noDuplicateJsonKeys": "warn"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "overrides": [
+    {
+      "include": ["*.config.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["services/http.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noRedeclare": "off"
+          }
+        }
+      }
+    }
+  ],
+  "files": {
+    "ignore": ["iam_definition.json", "cache/**/*.json"]
+  }
+}

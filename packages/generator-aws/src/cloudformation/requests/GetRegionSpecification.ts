@@ -1,59 +1,44 @@
-import { Data, Effect, Request, RequestResolver } from 'effect'
+import { Effect, Request, RequestResolver } from 'effect'
 import { HttpService } from '../../services/http'
 import { parseJson } from '../../shared/json'
-import type { RegionalSpecificationData } from '../models/RegionalSpecificationData'
+import { FetchSpecificationError } from '../models/FetchSpecificationError'
+import type { RegionSpecificationEndpoint } from '../models/RegionSpecificationEndpoint'
 import { Specification } from '../models/Specification'
-
-export class GetRegionSpecificationError extends Data.TaggedError(
-  'GetRegionSpecificationError',
-)<{
-  readonly message: string
-}> {
-  static fail(
-    message: string,
-  ): Effect.Effect<never, GetRegionSpecificationError, never> {
-    return Effect.fail(new GetRegionSpecificationError({ message }))
-  }
-
-  static catchAll<E>(message: (error: E) => string) {
-    return Effect.catchAll<E, never, GetRegionSpecificationError, never>(
-      (error) => GetRegionSpecificationError.fail(message(error)),
-    )
-  }
-}
 
 export class GetRegionSpecification extends Request.TaggedClass(
   'GetRegionSpecification',
-)<Specification, GetRegionSpecificationError, { region: string; url: string }> {
+)<
+  Specification,
+  FetchSpecificationError,
+  { region: string; endpoint: string }
+> {
   static resolver = RequestResolver.fromEffect(
     (request: GetRegionSpecification) =>
       Effect.gen(function* () {
         const http = yield* HttpService
 
-        yield* Effect.logDebug(`Fetching specification for ${request.region}`)
+        yield* Effect.logDebug(`Fetching ${request.region} specification`)
 
-        const text = yield* http.fetch(request.url)
-        yield* Effect.logDebug(`Specification for ${request.region} fetched`)
+        const text = yield* http.fetch(request.endpoint)
+        yield* Effect.logDebug(`${request.region} specification fetched`)
 
         const json = yield* parseJson(text)
         const specification = yield* Specification.decodeUnknown(json)
 
-        yield* Effect.log(`Specification for \`${request.region}\` parsed`)
+        yield* Effect.log(`${request.region} specification decoded`)
 
         return specification
       }).pipe(
-        Effect.withLogSpan(
-          `CloudFormation/GetRegionSpecification/${request.region}`,
-        ),
-        GetRegionSpecificationError.catchAll(
-          (error) => `Failed to fetch specification: ${error.message}`,
+        Effect.withLogSpan(`GetRegionSpecification/${request.region}`),
+        FetchSpecificationError.catchAll(
+          (error) => `Failed to fetch region specification: ${error.message}`,
         ),
       ),
   ).pipe(RequestResolver.contextFromServices(HttpService))
 
   static make(
-    input: RegionalSpecificationData,
-  ): Effect.Effect<Specification, GetRegionSpecificationError, HttpService> {
+    input: RegionSpecificationEndpoint,
+  ): Effect.Effect<Specification, FetchSpecificationError, HttpService> {
     return Effect.request(
       new GetRegionSpecification(input),
       GetRegionSpecification.resolver,

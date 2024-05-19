@@ -152,13 +152,22 @@ export class Specification extends Schema.Class<Specification>('Specification')(
     ResourceSpecificationVersion: Schema.String,
   },
 ) {
+  static empty = new Specification({
+    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+    PropertyTypes: {},
+    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+    ResourceTypes: {},
+    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+    ResourceSpecificationVersion: '',
+  })
+
   static decodeUnknown(
     json: unknown,
   ): Effect.Effect<Specification, ParseError> {
     return Schema.decodeUnknown(Specification)(json)
   }
 
-  static merge(left: Specification, right: Specification): void {
+  static merge(left: Specification, right: Specification): Specification {
     const version = Order.max(Order.string)(
       left.ResourceSpecificationVersion,
       right.ResourceSpecificationVersion,
@@ -169,5 +178,7 @@ export class Specification extends Schema.Class<Specification>('Specification')(
       right: right.ResourceSpecificationVersion,
       version,
     })
+
+    return Specification.empty
   }
 }

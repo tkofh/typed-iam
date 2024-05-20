@@ -1,6 +1,6 @@
 import { Schema } from '@effect/schema'
 import type { ParseError } from '@effect/schema/ParseResult'
-import { type Effect, Order } from 'effect'
+import type { Effect } from 'effect'
 
 const Documented = Schema.Struct({
   // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
@@ -152,14 +152,14 @@ export class Specification extends Schema.Class<Specification>('Specification')(
     ResourceSpecificationVersion: Schema.String,
   },
 ) {
-  static empty = new Specification({
-    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
-    PropertyTypes: {},
-    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
-    ResourceTypes: {},
-    // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
-    ResourceSpecificationVersion: '',
-  })
+  // static empty = new Specification({
+  //   // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+  //   PropertyTypes: {},
+  //   // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+  //   ResourceTypes: {},
+  //   // biome-ignore lint/style/useNamingConvention: AWS uses PascalCase
+  //   ResourceSpecificationVersion: '',
+  // })
 
   static decodeUnknown(
     json: unknown,
@@ -167,18 +167,43 @@ export class Specification extends Schema.Class<Specification>('Specification')(
     return Schema.decodeUnknown(Specification)(json)
   }
 
-  static merge(left: Specification, right: Specification): Specification {
-    const version = Order.max(Order.string)(
-      left.ResourceSpecificationVersion,
-      right.ResourceSpecificationVersion,
-    )
+  // static merge(left: Specification, right: Specification): Specification {
+  //   const version = Order.max(Order.string)(
+  //     left.ResourceSpecificationVersion,
+  //     right.ResourceSpecificationVersion,
+  //   )
+  //
+  //   console.log({
+  //     left: left.ResourceSpecificationVersion,
+  //     right: right.ResourceSpecificationVersion,
+  //     version,
+  //   })
+  //
+  //   return Specification.empty
+  // }
 
-    console.log({
-      left: left.ResourceSpecificationVersion,
-      right: right.ResourceSpecificationVersion,
-      version,
-    })
-
-    return Specification.empty
+  getProperties() {
+    // return Stream.unfoldChunk(
+    //   List.fromIterable(Object.entries(this.ResourceTypes)),
+    //   (remaining) =>
+    //     Option.match(List.head(remaining), {
+    //       onNone: Option.none,
+    //       onSome: ([_key, value]) => {
+    //         return Option.some([
+    //           Chunk.make(value.Properties),
+    //           List.tail(remaining),
+    //         ] as const)
+    //       },
+    //     }),
+    // )
   }
+
+  // #getNestedProperties(resource: string, property: string, type: string) {
+  // const propertyTypes = this.PropertyTypes
+  //
+  // // biome ignore lint/complexity/noExcessiveCognitiveComplexity: w/e i'm gonna delete this later anyway probably
+  // return function*() {
+  //   const propertyType = propertyTypes[`${resource}.${type}`]
+  // }
+  // }
 }

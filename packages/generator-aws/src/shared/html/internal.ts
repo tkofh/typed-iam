@@ -1,4 +1,5 @@
 import { Array, Effect, List, Option, Stream } from 'effect'
+import { unfoldTree } from '../stream'
 import { HtmlElement } from './element'
 import type {
   ChildSelection,
@@ -10,24 +11,30 @@ import type {
 export function createElementStream(
   element: HtmlElement,
 ): Stream.Stream<HtmlChild> {
-  return Stream.unfold<List.List<HtmlChild>, HtmlChild>(
-    List.of(element),
-    (remaining) =>
-      Option.match(List.head(remaining), {
-        onNone: () => Option.none(),
-        onSome: (node) =>
-          Option.some([
-            node,
-            List.drop(remaining, 1).pipe(
-              List.prependAll(
-                'children' in node
-                  ? List.fromIterable(node.children)
-                  : List.nil<HtmlChild>(),
-              ),
-            ),
-          ] as const),
-      }),
+  return unfoldTree(
+    List.of<HtmlChild>(element),
+    (node) => node,
+    (node) => ('children' in node ? node.children : []),
+    'depth',
   )
+  // return Stream.unfold<List.List<HtmlChild>, HtmlChild>(
+  //   List.of(element),
+  //   (remaining) =>
+  //     Option.match(List.head(remaining), {
+  //       onNone: () => Option.none(),
+  //       onSome: (node) =>
+  //         Option.some([
+  //           node,
+  //           List.drop(remaining, 1).pipe(
+  //             List.prependAll(
+  //               'children' in node
+  //                 ? List.fromIterable(node.children)
+  //                 : List.nil<HtmlChild>(),
+  //             ),
+  //           ),
+  //         ] as const),
+  //     }),
+  // )
 }
 
 function toTagSet<T>(tag: MaybeArray<T>) {
